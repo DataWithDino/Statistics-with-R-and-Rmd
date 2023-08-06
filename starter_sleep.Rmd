@@ -1,0 +1,142 @@
+---
+title: "Homework  - Sleep deprivation"
+date: "Insert date here"
+output:
+  html_document:
+    theme: readable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+show_solution = FALSE
+```
+
+The [Sleep Foundation](https://www.sleepfoundation.org/) conducted a survey on the sleep habits of randomly sampled transportation workers and a control sample of non-transportation workers. 
+
+
+
+### Warm up
+
+Before we introduce the data, let's warm up with some simple exercises.
+Update the YAML of your R Markdown file with your information and knit.
+
+
+> Remove all `eval = FALSE`, when you think the code in this code chunk is correct. Don't forget to label your chunks, like ex-1 for the first chunk. Do not use spaces in code chunk labels.
+
+
+### Packages
+
+
+```{r eval = TRUE, message = FALSE}
+library(tidyverse) 
+library(infer)
+library(openintro)
+```
+
+> Beware aware that you submission NEEDS to contain ALL your R code as well as the corresponding output. So, NEVER choose the chunk option `echo=FALSE`.    
+
+
+
+-------------
+
+
+### Exercises 1
+
+# Solution: This is an observational study. The participants were not assigned to one of the conditions - transportation workers yes/no, amount of sleep. 
+
+
+### Exercise 2
+
+# Solution: The easiest way to create such a table is using table() in combination with addmargins()
+
+
+```{r ex-2, }
+sleep_deprivation |> 
+  table() |> 
+  addmargins()
+# We are looking for a conditional proportion. Since we condition on the transportation workers, we have to remove the number of observations from the control group. Hence, the conditional proportion we are looking for is
+(139-35) / (1087 - 292)
+```
+
+### Exercise 3
+
+Remove this text, and add your answer for Exercise 3 here.
+
+```{r ex-3, eval=FALSE}
+ggplot(sleep_deprivation, aes(x = profession, fill = sleep) ) +
+  geom_bar(position = "fill") + 
+  scale_fill_viridis_d() +
+  labs(title = "Sleep deprived transportation workers",
+       subtitle = "Distribution of sleep within each professeion",
+       caption = "Source: sleepfoundation.org",
+       y = "proportion")
+```
+
+#### Exercise 4
+
+# Solution: It seems as if the two variables are dependent. The ratios of the proportions within each level do not seem to be the same over the different levels, e.g., we see significantly fewer pilots who sleep less than six hours compared to truck drivers.
+
+
+### Exercise 5  
+
+# Solution: The appropriate test is a chi-squared test of independence. This means we will test the null hypothesis of independence against the alternative of having dependent variables. The null distribution of the chi-squared statistic can be simulated in the following way
+
+```{r}
+set.seed(123)
+null_dist <- sleep_deprivation |> 
+  specify(formula = sleep ~ profession) |> 
+  hypothesize(null = "independence") |> 
+  generate(reps = 1000, type = "permute") |> 
+  calculate(stat = "Chisq")
+
+# To compute the p-value we need the observed value in the sample of the test statistic
+
+obs_chisq <- sleep_deprivation |> 
+  observe(
+    formula = sleep ~ profession,
+    stat = "Chisq"
+  )
+
+# Now we can visualize the null distribution and shade the p-value
+
+visualize(null_dist) +
+  shade_p_value(obs_stat = obs_chisq, direction = "greater")
+null_dist |> 
+  get_p_value(obs_stat = obs_chisq, direction = "greater")
+```
+
+
+
+
+### Exercise 6
+
+
+Remove this text, and add your answer for Exercise 6 here.
+
+
+```{r }
+sleep_deprivation <- sleep_deprivation |> 
+  mutate(transportation_worker = case_when(
+    profession == "control" ~ "no",
+    .default = "yes"
+  )
+  )
+
+
+sleep_deprivation |> 
+  ggplot(aes(x = transportation_worker, fill = sleep)) +
+  geom_bar(position = "fill")
+```
+
+
+
+
+### Exercise 7
+
+```{r }
+chisq.test(
+  x = sleep_deprivation$sleep, 
+  y = sleep_deprivation$transportation_worker)
+```
+# The reported p-value is larger than the significance level of 0.1. Therefore, we fail to reject the null hypothesis of independence. This is not so surprising since the distribution of sleep in the control group is not so much different compared to the pilots and train operators groups. Given that, the difference with respect to the two other groups are not large enough as we have already seen from the plot in exercise 6.
+

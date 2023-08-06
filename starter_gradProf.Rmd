@@ -1,0 +1,133 @@
+---
+title: "Homework - Grading the professor"
+output:
+  html_document:
+    theme: readable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+show_solution = FALSE
+```
+
+Many college courses conclude by giving students the opportunity to evaluate the course and the instructor anonymously.
+However, the use of these student evaluations as an indicator of course quality and teaching effectiveness is often criticized because these measures may reflect the influence of non-teaching related characteristics, such as the physical appearance of the instructor.
+The article titled, "[Beauty in the classroom: instructors' pulchritude and putative pedagogical productivity](http://www.sciencedirect.com/science/article/pii/S0272775704001165)" (Hamermesh and Parker, 2005) found that instructors who are viewed to be better looking receive higher instructional ratings.
+
+
+The data were gathered from end of semester student evaluations for a large sample of professors from the University of Texas at Austin.
+In addition, six students rated the professors' physical appearance.
+The result is a data frame where each row contains a different course and columns represent variables about the courses and professors.
+
+
+
+## Packages
+
+
+```{r}
+library(tidyverse) 
+library(openintro)
+```
+
+
+## Data
+
+The data can be found in the **openintro** package, and it's called `evals`.
+You can find out more about the dataset by inspecting its documentation, which you can access by running `?evals` in the Console or using the Help menu in RStudio to search for `evals`.
+
+
+------------------------
+### Exercises 1
+
+Remove this text, and add your answer for Exercise 1 here.
+
+
+```{r}
+ggplot(evals, aes(x = score)) + 
+  geom_histogram()
+```
+
+
+### Exercises 2
+
+# Both variables are numeric. Hence, we make a scatterplot to describe their relationship. Since we think of score being the response variable, we choose the y aesthetic being equal to score.
+
+
+
+```{r,}
+ggplot(evals, aes(x = bty_avg, y = score)) + 
+  geom_point()
+```
+# On average, the score increases with an increasing beauty rating. But we also detect quite some variation for a given beauty rating.
+
+
+
+### Exercises 3
+
+```{r}
+ggplot(evals, aes(x = bty_avg, y = score)) + 
+  geom_jitter()
+```
+
+
+### Exercises 4
+
+```{r}
+score_bty_fit <- lm(score ~ bty_avg, data = evals)
+summary(score_bty_fit)
+```
+
+
+
+### Exercises 5
+
+```{r}
+ggplot(evals, aes(x = bty_avg, y = score)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", colour = "orange", se = FALSE)
+```
+
+
+
+
+### Exercises 6
+#From the summary we obtain the slope estimate 0.06664. So, for each unit increase in the beauty rating, we would expect the teaching score to increase by 0.06664 on average.
+# From the help we detect that the minimum value for the beauty rating is 1. This implies that the intercept doesn't make sense in this context, since each prof will have a beauty rating larger than zero.
+
+### Exercises 7
+#From the summary, we obtain an R^2 value of 0.03502. This means that the fitted model can explain 3.502 percent of the variability in the score values.
+# The remainder of the variability is explained by variables not included in the model or by inherent randomness in the data.
+
+### Exercises 8
+
+Remove this text, and add your answer for Exercise 8 here.
+
+```{r}
+score_gender_fit <- lm(score ~ gender, data = evals)
+summary(score_gender_fit)
+```
+# The slope of gender refers to male, so female is the reference category. Let's start with an interpretation of the intercept: On average, female professors have received a score value of 4.09282.
+# Interpretation of the slope: On average, the evaluation score increases for male professors by 0.14151 compared to female professors.
+
+
+
+### Exercises 9
+
+Remove this text, and add your answer for Exercise 9 here.
+
+```{r}
+score_rank_fit <- lm(score ~ rank, data = evals)
+# A summary of the fitted model looks like this
+summary(score_rank_fit)
+```
+# The slopes of rank refer to tenure track and tenured, so teaching is the reference category. Let's start with an interpretation of the intercept: On average, teaching professors have received a score of 4.28431.
+# Interpretation of the slopes: 
+# 1. On average, the evaluation score decreases for tenure track professors by 0.12968 compared to teaching professors.
+# 2. On average, the evaluation score decreases for tenured professors by 0.14518 compared to teaching professors.
+
+
+
+### Exercises 10
+#The model `score_gender_fit` uses two parameters and `score_rank_fit` uses three. Although the latter one uses more parameters, it shows an even lower R^2 value. Therefore, we would choose the first one, since we prefer high R^2 values.
+# Remark: Since the two models have a different number of parameters, we should consider the Adjusted R-squared, as we see later on. But this doesn't make a difference in this case.
+# The R^2 being very low is somehow apparent since we see a lot of variation in the data, but the models just predict two and three different values (the mean values per group), respectively. Hence, they cannot capture the variation contained in the data.

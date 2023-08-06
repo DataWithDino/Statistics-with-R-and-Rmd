@@ -1,0 +1,155 @@
+---
+title: "Homework - Boston housing data"
+output:
+  html_document:
+    theme: readable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+show_solution = TRUE
+```
+
+
+The `MASS` package contains the `Boston` dataset, which records the median house value (`medv`) for 506 neighborhoods around Boston. We will seek to predict `medv` using 13 predictors, such as the average number of rooms per house (`rm`), the proportion of owner-occupied units built prior to 1940 (`age`), and the percent of households with low socio-economic status (`lstat`). 
+
+## Getting started
+
+
+## Packages
+
+We'll use the **tidyverse** package for  visualisation, the data lives in the **MASS** package and **ggfortify** is used for graphical analysis of the residuals.
+
+```{r, message=FALSE}
+library(tidyverse)  
+library(MASS)
+library(ggfortify)
+```
+
+
+## Data
+
+The data can be found in the **MASS** package, and it's called `Boston`.
+You can find out more about the dataset by inspecting its documentation, which you can access by running `?Boston` in the Console or using the Help menu in RStudio to search for `Boston`.
+
+> Beware aware that you submission NEEDS to contain ALL your R code as well as the corresponding output. So, NEVER choose the chunk option `echo=FALSE`.    
+
+------------------------
+
+### Exercises 1
+
+```{r}
+pairs(Boston)
+```
+
+### Exercises 2
+
+```{r, eval=FALSE}
+fit_lstat <- lm(medv ~ lstat, data = Boston)
+summary(fit_lstat)
+```
+
+### Exercises 3
+# The estimated slope of `lstat` 
+```{r}
+coef(fit_lstat)[2]
+# This means that for each 1% increase in the percentage of low socio-economic status individuals residing in the neighbourhood, the median home values on average decrease by 
+1000 * abs(coef(fit_lstat)[2])
+```
+
+### Exercises 4
+
+Remove this text, and add your answer for Exercise 4 here.
+
+
+```{r, eval=FALSE}
+autoplot(fit_lstat)
+```
+# The Residual vs. Fitted indicates that there appears to be a non-linear structure still contained in the residuals. Hence, the model does not fit the data well. 
+
+
+### Exercises 5
+
+
+```{r, eval=FALSE}
+fit_lstat2 <- lm(medv ~ lstat + I(lstat^2), data = Boston)
+autoplot(fit_lstat2)
+
+```
+# The Residual vs. Fitted is now much improved. No structure can be detected anymore. But the Scale-Location plot indicates that the assumption of constant variance in the residuals might not hold. We see an increase in variation for higher fitted values. This is also seen in the Normal Q-Q plot by deviations from the dotted line in the right tail. Conclusion: the fit was improved, but we still can't say that the model fits well.
+
+
+### Exercises 6
+
+Remove this text, and add your answer for Exercise 6 here.
+
+
+```{r, eval=FALSE}
+# Solution:
+ggplot(Boston, aes(x = age, y = medv)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+## The linear model seems OK here.  There is perhaps a 'dip' in the 90%+ range that the model doesn't capture, but this is difficult to see due to the skewed distribution of the `age` variable.
+
+### Exercises 7
+```{r}
+fit_lstat_age <- lm(medv ~ lstat + age, data = Boston)
+
+# The estimate for the slope of age is equal to
+coef(fit_lstat_age)["age"]
+# This says that, holding `lstat` constant, every additional percent increase in pre-1940 homes in a neighbourhood is associated with an average increase of 
+1000 * coef(fit_lstat_age)["age"]
+# dollars in median home value.
+# When considering `age` as the only predictor variable, we saw a negative linear relation between `medv` and `age`. Now the slope estimate is positive. This might be due to a collinearty between `lstat` and `age`, which affects the estimation results.
+
+ggplot(Boston, aes(x = age, y = lstat)) + 
+  geom_point()
+# This seems to be the case. With an increasing proportion of pre-1940 homes, we see an increase in the proportion of individuals with low socio-economic status living in the neighborhood.
+```
+
+
+### Exercises 8
+```{r}
+fit_full <- lm(medv ~ ., data = Boston)
+
+fit_back <- step(fit_full, direction = "backward")
+summary(fit_back)
+```
+
+
+### Exercises 9
+# Variables with positive coefficients:
+# - `zn` :  proportion of residential land zoned for lots over 25,000 sq.ft.  It makes sense that neighbourhoods with larger lots have higher home values
+# - `chas` : Charles River dummy variable (= 1 if tract bounds river; 0 otherwise).  It's possible that the neighbourhoods bordering the Charles river are more desirable.
+# - `rm`: average number of rooms per dwelling.  More bedrooms, higher price.  Makes total sense.
+# - `rad`: index of accessibility to radial highways.`  Highway access = easier commutes, which can make neighbourhoods more desirable/expensive.
+# - `black`: where Bk is the proportion of blacks by town.  This variable is hard to interpret.  Why are we looking at `(Bk - 0.63)^2`?
+#
+#Variables with negative coefficients:
+# - `crim`: per capita crime rate by town.`Neighbourhoods with high crime tend to be less desirable. Makes sense.
+# - `nox`: nitrogen oxides concentration (parts per 10 million).  Neighbourhoods with less air pollution tend to be more expensive
+# - `dis : weighted mean of distances to five Boston employment centres.  People will pay more to live close to the main employment centres.
+# - `tax`: full-value property-tax rate per $10,000.  Neighbourhoods with higher tax rates tend to have lower housing prices, all else being equal.  That's maybe not so obvious.  
+# - `ptratio`: pupil-teacher ratio by town. People will pay more to send their kids to schools where there are fewer students for every teacher.  Makes sense.
+# - `lstat`: higher percentages of the population with low socioeconomic status lead to lower housing prices. It makes sense; less affluent neighborhoods have lower home values.
+### Exercises 10
+
+Remove this text, and add your answer for Exercise 10 here.
+
+```{r, eval=FALSE}
+fit_final <- update(fit_back, ~ . + I(lstat^2))
+AIC(fit_back)
+AIC(fit_final)
+```
+
+
+### Exercises 11
+
+Remove this text, and add your answer for Exercise 11 here.
+
+
+```{r}
+autoplot(fit_final)
+
+```

@@ -1,0 +1,111 @@
+---
+title: "Homework  - Speeding on the I-5"
+output:
+  html_document:
+    theme: readable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+show_solution = FALSE
+```
+
+
+A study investigated the distribution of passenger vehicle speeds traveling on the [Interstate 5 Freeway](https://en.wikipedia.org/wiki/Interstate_5) (I-5) in California. They discovered that the __distribution is nearly normal__ with a __mean of 72.6 miles/hour__ and a __standard deviation of 4.78 miles/hour__.
+
+
+
+
+### Packages
+
+We'll use the **tidyverse** package for data wrangling and visualisation.
+
+
+You can load the package by running the following code:
+
+```{r}
+library(tidyverse) 
+```
+
+
+> Use R to compute all probabilities in the upcoming exercises. Beware aware that you submission NEEDS to contain ALL your R code as well as the corresponding output. So, NEVER choose the chunk option `echo=FALSE`.    
+
+
+
+-------------
+
+
+### Exercises 1
+
+# The speed of passenger vehicles has a normal distribution with mean 72.6 and standard deviation 4.78. Hence, the probability is given by
+
+```{r}
+pnorm(80, mean = 72.6, sd = 4.78)
+```
+
+
+### Exercise 2
+
+# We compute the probability of traveling less than 80 and then subtract the probability of traveling less than 60
+
+```{r ex-2}
+pnorm(80, mean = 72.6, sd = 4.78) - pnorm(60, mean = 72.6, sd = 4.78)
+```
+
+### Exercise 3
+
+# The fastest 5% is nothing else than the 0.95 quantile of the distribution. We have two options to compute it. Either
+
+
+```{r}
+qnorm(0.95, mean = 72.6, sd = 4.78)
+```
+
+#### Exercise 4
+
+#This is just the probability of traveling with a speed of more than 70 miles. We have again two options to compute the probability. Either we subtract from 1 the probability of traveling with a speed of less than 70 miles (subtract the cumulative distribution function at 70)
+
+
+```{r}
+1 - pnorm(70, mean = 72.6, sd = 4.78)
+```
+
+
+
+
+### Exercise 5  
+
+# The officer is watching 5 Bernoulli trials (speeding yes/no) and counts the number of successes (car is speeding). Hence, the outcome follows a Binomial distribution with n=5 and success probability p=0.7067562. The question now is, how likely it is, that no car is speeding. 
+
+
+```{r}
+dbinom(0, size = 5, prob = 0.7067562)
+```
+
+
+
+
+### Exercise 6
+
+
+# Solution: Now the officer is interested in the event of waiting until the first car is speeding. This event follows a geometric distribution with success probability p=0.7067562. From the lecture we now that expectation of this distribution is equal to 1/p, which leads to a value of
+1 / 0.7067562
+
+
+
+### Exercise 7
+
+Start by reading in the data
+
+```{r, eval=FALSE}
+speed_data <- read_csv("speed_data.csv")
+```
+
+
+```{r ex-7-b, eval=FALSE}
+speed_data |> 
+  summarize(
+    mean_speed = mean(speed),
+    sd_speed = sd(speed)
+  )
+```
