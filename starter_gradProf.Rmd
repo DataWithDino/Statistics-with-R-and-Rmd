@@ -1,5 +1,5 @@
 ---
-title: "Homework - Grading the professor"
+title: "Grading the professor"
 output:
   html_document:
     theme: readable

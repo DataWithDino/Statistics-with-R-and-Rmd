@@ -1,5 +1,5 @@
 ---
-title: "Homework  - Speeding on the I-5"
+title: "Speeding on the I-5"
 output:
   html_document:
     theme: readable
@@ -29,9 +29,6 @@ library(tidyverse)
 
 
 > Use R to compute all probabilities in the upcoming exercises. Beware aware that you submission NEEDS to contain ALL your R code as well as the corresponding output. So, NEVER choose the chunk option `echo=FALSE`.    
-
-
-
 -------------
 
 
@@ -88,7 +85,7 @@ dbinom(0, size = 5, prob = 0.7067562)
 ### Exercise 6
 
 
-# Solution: Now the officer is interested in the event of waiting until the first car is speeding. This event follows a geometric distribution with success probability p=0.7067562. From the lecture we now that expectation of this distribution is equal to 1/p, which leads to a value of
+# Now the officer is interested in the event of waiting until the first car is speeding. This event follows a geometric distribution with success probability p=0.7067562. From the lecture we now that expectation of this distribution is equal to 1/p, which leads to a value of
 1 / 0.7067562
 
 
