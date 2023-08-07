@@ -1,5 +1,5 @@
 ---
-title: "Homework  - Sleep deprivation"
+title: "Sleep deprivation"
 date: "Insert date here"
 output:
   html_document:
@@ -14,40 +14,26 @@ show_solution = FALSE
 The [Sleep Foundation](https://www.sleepfoundation.org/) conducted a survey on the sleep habits of randomly sampled transportation workers and a control sample of non-transportation workers. 
 
 
-
-### Warm up
-
-Before we introduce the data, let's warm up with some simple exercises.
-Update the YAML of your R Markdown file with your information and knit.
-
-
-> Remove all `eval = FALSE`, when you think the code in this code chunk is correct. Don't forget to label your chunks, like ex-1 for the first chunk. Do not use spaces in code chunk labels.
-
-
 ### Packages
 
 
-```{r eval = TRUE, message = FALSE}
+```{r}
 library(tidyverse) 
 library(infer)
 library(openintro)
 ```
-
-> Beware aware that you submission NEEDS to contain ALL your R code as well as the corresponding output. So, NEVER choose the chunk option `echo=FALSE`.    
-
-
 
 -------------
 
 
 ### Exercises 1
 
-# Solution: This is an observational study. The participants were not assigned to one of the conditions - transportation workers yes/no, amount of sleep. 
+#This is an observational study. The participants were not assigned to one of the conditions - transportation workers yes/no, amount of sleep. 
 
 
 ### Exercise 2
 
-# Solution: The easiest way to create such a table is using table() in combination with addmargins()
+# The easiest way to create such a table is using table() in combination with addmargins()
 
 
 ```{r ex-2, }
@@ -60,9 +46,8 @@ sleep_deprivation |>
 
 ### Exercise 3
 
-Remove this text, and add your answer for Exercise 3 here.
 
-```{r ex-3, eval=FALSE}
+```{r}
 ggplot(sleep_deprivation, aes(x = profession, fill = sleep) ) +
   geom_bar(position = "fill") + 
   scale_fill_viridis_d() +
@@ -74,12 +59,12 @@ ggplot(sleep_deprivation, aes(x = profession, fill = sleep) ) +
 
 #### Exercise 4
 
-# Solution: It seems as if the two variables are dependent. The ratios of the proportions within each level do not seem to be the same over the different levels, e.g., we see significantly fewer pilots who sleep less than six hours compared to truck drivers.
+# It seems as if the two variables are dependent. The ratios of the proportions within each level do not seem to be the same over the different levels, e.g., we see significantly fewer pilots who sleep less than six hours compared to truck drivers.
 
 
 ### Exercise 5  
 
-# Solution: The appropriate test is a chi-squared test of independence. This means we will test the null hypothesis of independence against the alternative of having dependent variables. The null distribution of the chi-squared statistic can be simulated in the following way
+# The appropriate test is a chi-squared test of independence. This means we will test the null hypothesis of independence against the alternative of having dependent variables. The null distribution of the chi-squared statistic can be simulated in the following way
 
 ```{r}
 set.seed(123)
@@ -109,10 +94,6 @@ null_dist |>
 
 
 ### Exercise 6
-
-
-Remove this text, and add your answer for Exercise 6 here.
-
 
 ```{r }
 sleep_deprivation <- sleep_deprivation |> 

@@ -1,5 +1,5 @@
 ---
-title: "Homework - Smokers in Whickham"
+title: "Smokers in Whickham"
 author: "DD"
 date: "Insert date here"
 output: html_document
@@ -16,67 +16,64 @@ library(mosaicData)
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
-
+#This is an observational study. The participants were not assigned to one of the conditions - smoker yes/no. It was merely observed if someone is  a smoker or not.
 
 ### Exercise 2
 
-Remove this text, and add your answer for Exercise 2 here.
-
+#The dataset contains 1314 observations. Since the data is given as a "pure" data.frame (and not a tibble), we find this information either in the help page or we run the code
+```{r}
+rnrow(Whickham)
+```
+# Each observations contains the infor,ation about the health outcome (dead/alive), the smoking status and age (at baseline) of one of the 1314 participants in the study.
 
 
 ### Exercise 3
 
-Remove this text, and add your answer for Exercise 3 here.
+# The dataset contains three variables: age, smoker, outcome. age is a numeric variable, smoker is a nominal variable and the type of outcome can be considered as ordinal (dead < alive) or just nominal.
 
-
-Don't forget to remove the chunk option `eval=FALSE` after you finished editing the code.
-
-```{r viz-variables, eval=FALSE}
+# age: histogram
+```{r}ggplot(Whickham, aes(x = age)) + 
+  geom_histogram(colour = "white")
+  # smoker: barplot
 ggplot(Whickham, aes(x = smoker)) +
-  geom_ ___
-```
+  geom_bar()
+  # outcome: barplot
+ggplot(Whickham, aes(x = outcome)) + 
+  geom_bar()
+````
 
 ### Exercise 4
 
-Remove this text, and add your answer for Exercise 4 here.
+# The expectation would be that among the deceased, the proportion of smokers would be higher than the proportion of non-smokers.
 
 ### Exercise 5
 
-Remove this text, and add your answer for Exercise 5 here.
 
-Don't forget to label your code chunks. Do not use spaces in code chunk labels.
-Don't forget to remove the chunk option `eval=FALSE` after you finished editing the code.
-
-```{r, eval=FALSE}
+```{r}
 Whickham |> 
-  ggplot(aes(y = outcome, fill = ___)) + 
-  ___
+  ggplot(aes(y = outcome, fill = smoker)) + 
+  geom_bar()
 ```
+# In the alive group we detect similar proportions for smokers and non-smokers, slightly higher for non-smokers. But in the dead group we observe a much larger proportion of dead non-smokers than dead smokers. This outcome is contradictory to our expectations.
 
 
-```{r, eval=FALSE}
+```{r}
 Whickham |> 
   select(smoker, outcome) |> 
   table() |> 
-  ___
+  prop.table(margin = 2) |> 
+  addmargins()
 ```
 
 ### Exercise 6
-
-Remove this text, and add your answer for Exercise 6 here.
-
-Don't forget to label your code chunk. Do not use spaces in code chunk labels.
-Don't forget to remove the chunk option `eval=FALSE` after you finished editing the code.
-
-```{r, eval=FALSE}
+We need to add a new variable to Whickham, so we will have to use mutate(). The value of the new variable must be determined using `case_when()`. A look at the help page of that function shows, that the given scheme is already of the correct form to be used in `case_when()`.
+```{r}
 Whickham <- Whickham |> 
-  ___(age_cat = case_when(
-    ___,
-    ___,
-    ___
-  )
-  )
+  mutate(age_cat = case_when(
+    age <= 44 ~ "18-44",
+    age > 44 & age <= 64 ~ "45-64",
+    age > 64 ~ "65+"
+  ))
 ```
 
 
@@ -89,8 +86,8 @@ Don't forget to remove the chunk option `eval=FALSE` after you finished editing 
 
 ```{r, eval=FALSE}
 Whickham |> 
-  count(smoker, age_cat, outcome) |> 
-  group_by(outcome, ___) |>
-  ___
+  ggplot(aes(y = outcome, fill = smoker)) + 
+  geom_bar() +
+  facet_wrap(~ age_cat)
 ```
 
