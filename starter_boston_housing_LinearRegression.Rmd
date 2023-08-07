@@ -1,5 +1,5 @@
 ---
-title: "Homework - Boston housing data"
+title: "Boston housing data"
 output:
   html_document:
     theme: readable
@@ -20,7 +20,7 @@ The `MASS` package contains the `Boston` dataset, which records the median house
 
 We'll use the **tidyverse** package for  visualisation, the data lives in the **MASS** package and **ggfortify** is used for graphical analysis of the residuals.
 
-```{r, message=FALSE}
+```{r, }
 library(tidyverse)  
 library(MASS)
 library(ggfortify)
@@ -32,7 +32,7 @@ library(ggfortify)
 The data can be found in the **MASS** package, and it's called `Boston`.
 You can find out more about the dataset by inspecting its documentation, which you can access by running `?Boston` in the Console or using the Help menu in RStudio to search for `Boston`.
 
-> Beware aware that you submission NEEDS to contain ALL your R code as well as the corresponding output. So, NEVER choose the chunk option `echo=FALSE`.    
+
 
 ------------------------
 
@@ -44,7 +44,7 @@ pairs(Boston)
 
 ### Exercises 2
 
-```{r, eval=FALSE}
+```{r}
 fit_lstat <- lm(medv ~ lstat, data = Boston)
 summary(fit_lstat)
 ```
@@ -59,9 +59,6 @@ coef(fit_lstat)[2]
 
 ### Exercises 4
 
-Remove this text, and add your answer for Exercise 4 here.
-
-
 ```{r, eval=FALSE}
 autoplot(fit_lstat)
 ```
@@ -69,7 +66,6 @@ autoplot(fit_lstat)
 
 
 ### Exercises 5
-
 
 ```{r, eval=FALSE}
 fit_lstat2 <- lm(medv ~ lstat + I(lstat^2), data = Boston)
@@ -81,9 +77,6 @@ autoplot(fit_lstat2)
 
 ### Exercises 6
 
-Remove this text, and add your answer for Exercise 6 here.
-
-
 ```{r, eval=FALSE}
 # Solution:
 ggplot(Boston, aes(x = age, y = medv)) +
@@ -91,6 +84,8 @@ ggplot(Boston, aes(x = age, y = medv)) +
   geom_smooth(method = "lm")
 ```
 ## The linear model seems OK here.  There is perhaps a 'dip' in the 90%+ range that the model doesn't capture, but this is difficult to see due to the skewed distribution of the `age` variable.
+
+
 
 ### Exercises 7
 ```{r}
@@ -133,9 +128,9 @@ summary(fit_back)
 # - `tax`: full-value property-tax rate per $10,000.  Neighbourhoods with higher tax rates tend to have lower housing prices, all else being equal.  That's maybe not so obvious.  
 # - `ptratio`: pupil-teacher ratio by town. People will pay more to send their kids to schools where there are fewer students for every teacher.  Makes sense.
 # - `lstat`: higher percentages of the population with low socioeconomic status lead to lower housing prices. It makes sense; less affluent neighborhoods have lower home values.
-### Exercises 10
 
-Remove this text, and add your answer for Exercise 10 here.
+
+### Exercises 10
 
 ```{r, eval=FALSE}
 fit_final <- update(fit_back, ~ . + I(lstat^2))
@@ -145,9 +140,6 @@ AIC(fit_final)
 
 
 ### Exercises 11
-
-Remove this text, and add your answer for Exercise 11 here.
-
 
 ```{r}
 autoplot(fit_final)
